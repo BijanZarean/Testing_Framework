@@ -26,7 +26,7 @@ class EcommercePracticeHomePage:
     
     @property
     def searchBTN(self):
-        return self.wait_for_element((By.XPATH, "//header/div[1]/div[1]/div[2]/div[1]/span[1]/button[1]"))
+        return self.wait_for_element((By.XPATH, ""))
     
     @property
     def searchTab(self):

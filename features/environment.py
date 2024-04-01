@@ -7,11 +7,14 @@ from selenium.webdriver.support.ui import WebDriverWait
 import os
 from datetime import datetime
 import allure
+##import logging
 
 
 # Fixture for setup and teardown
 @fixture
 def browser_setup(context):
+    print("Browser is being setup")
+    
     # Setup
     #print("This is before hook")
     context.driver = Driver.get_driver()  # Get the WebDriver instance
@@ -24,11 +27,20 @@ def browser_setup(context):
     # The setup phase (before yield) includes actions to be performed before each scenario, 
     # such as initializing the WebDriver instance, maximizing the browser window, and setting implicit wait time.
     yield context.driver
+    
+    Driver.quit_driver()
     # The teardown phase (after yield) includes actions to be performed after each scenario, 
     # such as taking a screenshot if the scenario fails and quitting the WebDriver instance.
 
-    # Teardown
+def before_all(context):
+    print("before all")
+    # Sets the log level to INFO, meaning all INFO, WARNING, ERROR, and CRITICAL messages will be displayed
+    use_fixture(browser_setup, context)
+    # -- HINT: CLEANUP-FIXTURE is performed after after_all() hook is called.
+    # Register the fixture
     
+def after_all(context):
+    print("after all")
     if context.failed:
          # Define directory and file name for screenshot
         screenshots_directory = "/Users/bijanzarean-work/Documents/Project/Testing_Framework/screenshots"
@@ -42,11 +54,3 @@ def browser_setup(context):
         
         # Attach the screenshot to the Allure report
         allure.attach.file(filepath, name="Screenshot on Failure", attachment_type=allure.attachment_type.PNG)
-   
-    Driver.quit_driver()
-    # Quit the driver, comment this out and the browser wont close after a run
-
-def before_all(context):
-    use_fixture(browser_setup, context)
-    # -- HINT: CLEANUP-FIXTURE is performed after after_all() hook is called.
-    # Register the fixture
